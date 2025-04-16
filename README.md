@@ -1,7 +1,7 @@
 # RESTful API for Library App
 This is a RESTful API built for the Library Management System at Kampus Gratis. It provides essential features to manage books, categories, and user authentication.
 
-# Feature
+## Feature
 - CRUD for books (Create, Read, Update, Delete)
 - User authentication (Register & Login)
 - Book category management
@@ -13,7 +13,7 @@ This is a RESTful API built for the Library Management System at Kampus Gratis. 
 - Book collection (bookmark)
 - Book download (redirect to gDrive)
 
-# Folder Structure
+## Folder Structure
 ```
 LibraryRestfullAPI/ 
 │ 
