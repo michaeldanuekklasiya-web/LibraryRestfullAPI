@@ -36,7 +36,7 @@ LibraryRestfullAPI/
 └── README
 ```
 
-# Tech Stack
+## Tech Stack
 |Package|Description|
 |----|-----|
 | express | Web framework for Node.js |
@@ -50,7 +50,7 @@ LibraryRestfullAPI/
 | pg-hstore    | Serializes and deserializes JSON for Sequelize with PostgreSQL |
 | sequelize    | Promise-based Node.js ORM for SQL databases  |
 
-# Installation
+## Installation
 1. `git clone https://github.com/michaeldanuekklasiya-web/LibraryRestfullAPI.git`
 2. `cd LibraryRestfullAPI/`
 3. `npm install`
@@ -59,7 +59,7 @@ LibraryRestfullAPI/
 > Update your environment variables inside .env
 npm run dev
 
-# API Endpoints
+## API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------| ------------|

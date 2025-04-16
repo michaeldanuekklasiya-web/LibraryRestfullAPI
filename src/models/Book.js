@@ -1,5 +1,4 @@
 import { DataTypes } from "sequelize";
-import './config/db.js';
 import sequelize from "../config/db.js";
 
 const Book = sequelize.define('Book', {
@@ -7,8 +6,7 @@ const Book = sequelize.define('Book', {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
-    allowNull: false,
-    defaultValue: Sequelize.literal('nextval("Book")')
+    allowNull: false
   },
   'title': {
     type: DataTypes.TEXT,
