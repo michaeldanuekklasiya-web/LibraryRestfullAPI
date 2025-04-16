@@ -132,7 +132,7 @@ https://localhost:3000/api/v1
 - URL
     - /books/id
 - Method
-    - GET
+    - PUT
 - Request Body
     - title as string
     - author as string
@@ -165,3 +165,179 @@ https://localhost:3000/api/v1
     }
 }
 ```
+
+### Delete Books/id
+- URL
+    - /books/id
+- Method
+    - DELETE
+```Response
+{
+    "status_code": 200,
+    "message": "Data Deleted Successfully",
+    "data": {
+        "id": 7,
+        "title": "Advanced JavaScript and Modern Web Development",
+        "author": "Johnathan Doe",
+        "date": "2024-02-09T17:00:00.000Z",
+        "category": "Web Development",
+        "image": "images/advanced-js.jpg",
+        "description": "An in-depth exploration of modern JavaScript features and web development frameworks, focusing on performance optimization and scalability.",
+        "publisher": "Tech Innovate Publishing",
+        "year_published": 2024,
+        "page_count": 520,
+        "format": "Hardcover",
+        "doi": "10.1205/webdev.2024.00000"
+    }
+}
+```
+
+### Search Books ( Title & Category )
+- URL
+    - /books?title=The&category=Journal
+- Method
+    - GET
+- Parameters
+    - title : the
+    - category : Journal
+```Response
+{
+    "status_code": 200,
+    "message": "Get All Data Book",
+    "data": {
+        "command": "SELECT",
+        "rowCount": 2,
+        "rows": [
+            {
+                "id": 1,
+                "title": "Cybersecurity in the Modern Era: Protecting Digital Assets",
+                "author": "Mark Johnson",
+                "date": "2024-01-04T17:00:00.000Z",
+                "category": "Journal",
+                "image": "images/cybersecurity-modern.jpg",
+                "description": "An in-depth analysis of cybersecurity threats and defense mechanisms, with a focus on modern digital infrastructures.",
+                "publisher": "SecureWorld Press",
+                "year_published": 2024,
+                "page_count": 520,
+                "format": "Hardcover",
+                "doi": "10.4455/cybersec.2024.66778899"
+            },
+            {
+                "id": 5,
+                "title": "Data Privacy: Navigating the Challenges",
+                "author": "John Harris",
+                "date": "2023-06-30T17:00:00.000Z",
+                "category": "Journal",
+                "image": "images/data-privacy.jpg",
+                "description": "This journal focuses on the growing challenges surrounding data privacy in the digital world.",
+                "publisher": "Privacy First Press",
+                "year_published": 2023,
+                "page_count": 450,
+                "format": "Hardcover",
+                "doi": "10.8765/data-privacy.2023.22334455"
+            }
+        ]
+    }
+}
+```
+
+### Book Collection ( Bookmarks )
+- URL
+    - /collections
+- Method
+    - POST
+- Request Body
+    - user_id as integer
+    - book_id as integer
+```Response
+{
+    "status_code": 201,
+    "message": "Berhasil menyimpan buku ke koleksi",
+    "data": {
+        "id": 1,
+        "user_id": 1,
+        "book_id": 2,
+        "created_at": "2025-04-10T02:22:49.414Z"
+    }
+}
+```
+
+### Get Book Collection ( Bookmarks )
+- URL
+    - /collections
+- Method
+    - GET
+```Response
+{
+    "status_code": 200,
+    "message": "Berhasil mengambil data koleksi",
+    "data": [
+        {
+            "collection_id": 3,
+            "created_at": "2025-04-10T02:25:12.350Z",
+            "user_id": 1,
+            "user_name": "Budi",
+            "user_email": "budi@example.com",
+            "book_id": 2,
+            "book_title": "The Future of Artificial Intelligence",
+            "book_author": "Sarah Williams",
+            "book_category": "Article"
+        },
+        {
+            "collection_id": 1,
+            "created_at": "2025-04-10T02:22:49.414Z",
+            "user_id": 1,
+            "user_name": "Budi",
+            "user_email": "budi@example.com",
+            "book_id": 2,
+            "book_title": "The Future of Artificial Intelligence",
+            "book_author": "Sarah Williams",
+            "book_category": "Article"
+        }
+    ]
+}
+```
+
+### Book Collection ID ( Un Bookmarks )
+- URL
+    - /collections/id
+- Method
+    - DELETE
+```Response
+{
+    "status_code": 200,
+    "message": "Berhasil menghapus koleksi",
+    "data": null,
+    "error": null,
+    "pagination": {
+        "prev": "",
+        "next": "",
+        "max": ""
+    }
+}
+```
+
+### User's Book Collection ID ( Un Bookmarks )
+- URL
+    - collections?user_id=2&book_id=1
+- Method
+    - DELETE
+- Parameters
+    - user_id : 2
+    - book_id : 1
+```Response
+{
+    "status_code": 200,
+    "message": "Berhasil menghapus koleksi",
+    "data": null,
+    "error": null,
+    "pagination": {
+        "prev": "",
+        "next": "",
+        "max": ""
+    }
+}
+```
+
+
+
