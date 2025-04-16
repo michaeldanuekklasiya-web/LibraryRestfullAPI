@@ -98,12 +98,70 @@ https://localhost:3000/api/v1
                 "doi": "10.3345/deep-learning.2024.55667788"
             }
         ]
-    },
-    "error": null,
-    "pagination": {
-        "prev": "",
-        "next": "",
-        "max": ""
+    }
+}
+```
+
+### Get Detail Books
+- URL
+    - /books/id
+- Method
+    - GET
+```Response
+{
+    "status_code": 200,
+    "message": "Data ditemukan",
+    "data": {
+        "id": 1,
+        "title": "Cybersecurity in the Modern Era: Protecting Digital Assets",
+        "author": "Mark Johnson",
+        "date": "2024-01-04T17:00:00.000Z",
+        "category": "Journal",
+        "image": "images/cybersecurity-modern.jpg",
+        "description": "An in-depth analysis of cybersecurity threats and defense mechanisms, with a focus on modern digital infrastructures.",
+        "publisher": "SecureWorld Press",
+        "year_published": 2024,
+        "page_count": 520,
+        "format": "Hardcover",
+        "doi": "10.4455/cybersec.2024.66778899"
+    }
+}
+```
+
+### Update Books/id
+- URL
+    - /books/id
+- Method
+    - GET
+- Request Body
+    - title as string
+    - author as string
+    - date as date (YYYY-MM-DD)
+    - category as string
+    - image as string (URL or path)
+    - description as string
+    - publisher as string
+    - year_published as string (or number if perlu)
+    - page_count as string (or number)
+    - format as string
+    - doi as string
+```Response
+{
+    "status_code": 200,
+    "message": "Data Updated Successfully",
+    "data": {
+        "id": 7,
+        "title": "Advanced JavaScript and Modern Web Development",
+        "author": "Johnathan Doe",
+        "date": "2024-02-09T17:00:00.000Z",
+        "category": "Web Development",
+        "image": "images/advanced-js.jpg",
+        "description": "An in-depth exploration of modern JavaScript features and web development frameworks, focusing on performance optimization and scalability.",
+        "publisher": "Tech Innovate Publishing",
+        "year_published": 2024,
+        "page_count": 520,
+        "format": "Hardcover",
+        "doi": "10.1205/webdev.2024.00000"
     }
 }
 ```
