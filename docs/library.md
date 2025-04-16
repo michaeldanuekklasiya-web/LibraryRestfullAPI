@@ -21,3 +21,89 @@ https://localhost:3000/api/v1
     - page_count as string (or number)
     - format as string
     - doi as string
+```Response
+{
+    "status_code": 201,
+    "message": "Data Added Successfully",
+    "data": {
+        "id": 2,
+        "title": "Cybersecurity in the Modern Era: Protecting Digital Assets",
+        "author": "Mark Johnson",
+        "date": "2024-01-04T17:00:00.000Z",
+        "category": "Journal",
+        "image": "images/cybersecurity-modern.jpg",
+        "description": "An in-depth analysis of cybersecurity threats and defense mechanisms, with a focus on modern digital infrastructures.",
+        "publisher": "SecureWorld Press",
+        "year_published": 2024,
+        "page_count": 520,
+        "format": "Hardcover",
+        "doi": "10.4455/cybersec.2024.66778899"
+    }
+}
+```
+
+### Get Data All Books
+- URL
+    - /books
+- Method
+    - GET
+```Response
+{
+    "status_code": 200,
+    "message": "Get All Data Book",
+    "data": {
+        "command": "SELECT",
+        "rowCount": 3,
+        "rows": [
+            {
+                "id": 1,
+                "title": "Cybersecurity in the Modern Era: Protecting Digital Assets",
+                "author": "Mark Johnson",
+                "date": "2024-01-04T17:00:00.000Z",
+                "category": "Journal",
+                "image": "images/cybersecurity-modern.jpg",
+                "description": "An in-depth analysis of cybersecurity threats and defense mechanisms, with a focus on modern digital infrastructures.",
+                "publisher": "SecureWorld Press",
+                "year_published": 2024,
+                "page_count": 520,
+                "format": "Hardcover",
+                "doi": "10.4455/cybersec.2024.66778899"
+            },
+            {
+                "id": 3,
+                "title": "Blockchain Technology: A Comprehensive Guide",
+                "author": "David Smith",
+                "date": "2023-09-14T17:00:00.000Z",
+                "category": "Journal",
+                "image": "images/blockchain-guide.jpg",
+                "description": "A thorough guide to understanding blockchain technology and its applications across industries.",
+                "publisher": "Blockchain Press",
+                "year_published": 2023,
+                "page_count": 600,
+                "format": "Hardcover",
+                "doi": "10.1234/blockchain.guide.2023.33445566"
+            },
+            {
+                "id": 4,
+                "title": "Deep Learning for Computer Vision",
+                "author": "Emily Taylor",
+                "date": "2024-02-17T17:00:00.000Z",
+                "category": "Article",
+                "image": "images/deep-learning-vision.jpg",
+                "description": "An article discussing deep learning techniques and their use in computer vision applications.",
+                "publisher": "AI Publications",
+                "year_published": 2024,
+                "page_count": 280,
+                "format": "Paperback",
+                "doi": "10.3345/deep-learning.2024.55667788"
+            }
+        ]
+    },
+    "error": null,
+    "pagination": {
+        "prev": "",
+        "next": "",
+        "max": ""
+    }
+}
+```
