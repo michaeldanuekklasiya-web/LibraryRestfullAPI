@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
 const Collection = sequelize.define(
-  "Collection", // Nama model menggunakan CamelCase
+  "Collection",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -20,7 +20,7 @@ const Collection = sequelize.define(
     },
   },
   {
-    tableName: "collections", // Nama tabel di database
+    tableName: "collections",
     timestamps: false,
   }
 );
