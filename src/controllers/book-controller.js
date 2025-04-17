@@ -1,4 +1,4 @@
-import bookService from '../services/book-service.js';
+import bookService from "../services/book-service.js";
 
 const uploadBook = async (req, res) => {
   try {
@@ -7,18 +7,101 @@ const uploadBook = async (req, res) => {
 
     return res.status(201).json({
       status_code: 201,
-      message: 'Data Added Successfully',
+      message: "Data Added Successfully",
       data: newBook,
     });
   } catch (error) {
     return res.status(500).json({
       status_code: 500,
-      message: 'Internal Server Error',
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+const updateBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+    const updatedBook = await bookService.update(id, updateData);
+
+    return res.status(200).json({
+      status_code: 200,
+      message: "Book updated successfully",
+      data: updatedBook,
+    });
+  } catch (error) {
+    return res.status(404).json({
+      status_code: 404,
+      message: "Book not found",
+      error: error.message,
+    });
+  }
+};
+
+const deleteBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await bookService.remove(id);
+
+    return res.status(200).json({
+      status_code: 200,
+      message: result.message,
+    });
+  } catch (error) {
+    return res.status(404).json({
+      status_code: 404,
+      message: "Book not found",
+      error: error.message,
+    });
+  }
+};
+
+const getAllBook = async (req, res) => {
+  try {
+    const filters = {
+      title: req.query.title || null,
+      category: req.query.category || null,
+    };
+
+    const books = await bookService.findAll(filters);
+
+    return res.status(200).json({
+      status_code: 200,
+      message: "Books fetched successfully",
+      data: books,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status_code: 500,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+const getBookById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const book = await bookService.findById(id);
+    return res.status(200).json({
+      status_code: 200,
+      message: "Book fetched successfully",
+      data: book,
+    });
+  } catch (error) {
+    return res.status(404).json({
+      status_code: 404,
+      message: "Book not found",
       error: error.message,
     });
   }
 };
 
 export default {
-  uploadBook
-}
+  uploadBook,
+  updateBook,
+  deleteBook,
+  getAllBook,
+  getBookById,
+};
