@@ -21,8 +21,21 @@ const deleteById = async (id) => {
   return deleted;
 };
 
+const deleteByUserAndBook = async (user_id, book_id) => {
+  if (!user_id || !book_id) {
+    throw new Error("user_id and book_id are required");
+  }
+
+  const deleted = await Collection.destroy({
+    where: { user_id, book_id },
+  });
+
+  return deleted;
+};
+
 export default {
   create,
   findAll,
   deleteById,
+  deleteByUserAndBook,
 };
