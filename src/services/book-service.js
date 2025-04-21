@@ -1,7 +1,8 @@
 import Book from "../models/Book.js";
 import { Op } from "sequelize";
+import { isDefined } from "../utils/helper.js";
 
-const create = async (request) => {
+const create = async (data) => {
   try {
     const {
       title,
@@ -15,9 +16,9 @@ const create = async (request) => {
       page_count,
       format,
       doi,
-    } = request;
+    } = data;
 
-    const book = await Book.create({
+    const newBook = await Book.create({
       title,
       author,
       date,
@@ -31,54 +32,75 @@ const create = async (request) => {
       doi,
     });
 
-    if (book.affectedRows === 0) throw new ResponseError(500, "Failed to create Book");
+    if (!newBook) throw new Error("Failed to create book");
 
-    return book;
-  } catch (e) {
-    throw e;
+    return newBook;
+  } catch (error) {
+    throw error;
   }
 };
 
-const findAll = async (filters = {}) => {
-  const where = {};
+const findAll = async (query = {}) => {
+  try {
+    const where = {};
 
-  if (filters.title !== null && filters.title !== undefined) {
-    where.title = { [Op.like]: `%${filters.title}%` };
-  }
+    const likeFields = ["title", "author", "category"];
+    likeFields.forEach((field) => {
+      if (isDefined(query[field])) {
+        where[field] = { [Op.iLike]: `%${query[field]}%` };
+      }
+    });
 
-  if (filters.category !== null && filters.category !== undefined) {
-    where.category = { [Op.like]: `%${filters.category}%` };
-  }
+    if (isDefined(query.year_published) && !isNaN(query.year_published)) {
+      where.year_published = parseInt(query.year_published, 10);
+    }
 
-  return await Book.findAll({ where });
+    const books = await Book.findAll({ where });
+    if (!books.length) throw new Error("Book not found");
+
+    return books;
+  } catch (error) {
+    throw error;
+  } 
 };
 
 const findById = async (id) => {
-  const book = await Book.findByPk(id);
-  if (!book) throw new Error("Book not found");
-  return book;
+  try {
+    if (!id || isNaN(id)) throw new Error("Invalid ID");
+
+    const book = await Book.findByPk(id);
+    if (!book) throw new Error("Book not found");
+
+    return book;
+  } catch (error) {
+    throw error;
+  }
 };
 
 const update = async (id, updateData) => {
-  const book = await Book.findByPk(id);
-  if (!book) throw new Error("Book not found");
-
-  await book.update(updateData);
-  return book;
+  try {
+    const book = await findById(id);
+    await book.update(updateData);
+    return book;
+  } catch (error) {
+    throw error;
+  }
 };
 
 const remove = async (id) => {
-  const book = await Book.findByPk(id);
-  if (!book) throw new Error("Book not found");
-
-  await book.destroy();
-  return { message: "Book deleted successfully" };
+  try {
+    const book = await findById(id);
+    await book.destroy();
+    return book;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export default {
   create,
-  update,
-  remove,
   findAll,
   findById,
+  update,
+  remove,
 };

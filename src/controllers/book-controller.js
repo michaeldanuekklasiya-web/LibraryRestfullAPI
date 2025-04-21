@@ -22,8 +22,8 @@ const uploadBook = async (req, res) => {
 const updateBook = async (req, res) => {
   try {
     const { id } = req.params;
-    const updateData = req.body;
-    const updatedBook = await bookService.update(id, updateData);
+    const newData = req.body;
+    const updatedBook = await bookService.update(id, newData);
 
     return res.status(200).json({
       status_code: 200,
@@ -42,11 +42,12 @@ const updateBook = async (req, res) => {
 const deleteBook = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await bookService.remove(id);
+    const deletedBook = await bookService.remove(id);
 
     return res.status(200).json({
       status_code: 200,
-      message: result.message,
+      message: "Book deleted successfully",
+      data: deletedBook,
     });
   } catch (error) {
     return res.status(404).json({
@@ -61,7 +62,9 @@ const getAllBook = async (req, res) => {
   try {
     const filters = {
       title: req.query.title || null,
-      category: req.query.category || null,
+      author: req.query.author || null,
+      year_published: req.query.year || null,
+      category: req.query.category || null
     };
 
     const books = await bookService.findAll(filters);
@@ -72,9 +75,9 @@ const getAllBook = async (req, res) => {
       data: books,
     });
   } catch (error) {
-    return res.status(500).json({
-      status_code: 500,
-      message: "Internal Server Error",
+    return res.status(404).json({
+      status_code: 404,
+      message: "Book not found",
       error: error.message,
     });
   }
