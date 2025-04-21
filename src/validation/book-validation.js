@@ -1,0 +1,31 @@
+import Joi from "joi";
+
+const bookValidation = Joi.object({
+  title: Joi.string().max(255).required(),
+  author: Joi.string().max(255).required(),
+  date: Joi.date().required(),
+  category: Joi.string().max(100).required(),
+  image: Joi.string().max(255).allow(null, ""), // Tanpa .uri()
+  description: Joi.string().allow(null, ""), // boleh kosong atau null
+  publisher: Joi.string().max(255).allow(null, ""),
+  year_published: Joi.number().integer().min(1000).max(new Date().getFullYear()).required(),
+  page_count: Joi.number().integer().min(1).required(),
+  format: Joi.string().max(100).required(),
+  doi: Joi.string().max(100).allow(null, ""), // boleh kosong kalau tidak pakai DOI
+});
+
+const updateBookValidation = Joi.object({
+  title: Joi.string().max(255),
+  author: Joi.string().max(255),
+  date: Joi.date(),
+  category: Joi.string().max(100),
+  image: Joi.string().max(255).allow(null, ""), // Tanpa .uri()
+  description: Joi.string().allow(null, ""),
+  publisher: Joi.string().max(255).allow(null, ""),
+  year_published: Joi.number().integer().min(1000).max(new Date().getFullYear()),
+  page_count: Joi.number().integer().min(1),
+  format: Joi.string().max(100),
+  doi: Joi.string().max(100).allow(null, ""),
+}).min(1); // update minimal harus ada satu field
+
+export { bookValidation, updateBookValidation };

@@ -1,8 +1,11 @@
 import Book from "../models/Book.js";
 import { Op } from "sequelize";
 import { isDefined } from "../utils/helper.js";
+import { validate } from "../validation/validation.js";
+import { bookValidation, updateBookValidation } from "../validation/book-validation.js";
+import { request } from "express";
 
-const create = async (data) => {
+const create = async (request) => {
   try {
     const {
       title,
@@ -16,7 +19,7 @@ const create = async (data) => {
       page_count,
       format,
       doi,
-    } = data;
+    } = validate(bookValidation, request);
 
     const newBook = await Book.create({
       title,
@@ -61,7 +64,7 @@ const findAll = async (query = {}) => {
     return books;
   } catch (error) {
     throw error;
-  } 
+  }
 };
 
 const findById = async (id) => {
@@ -79,8 +82,15 @@ const findById = async (id) => {
 
 const update = async (id, updateData) => {
   try {
+    // Validasi input dulu
+    const { error, value } = updateBookValidation.validate(updateData);
+    if (error) {
+      throw new Error(`Validation error: ${error.details[0].message}`);
+    }
+
+    // Lanjut update kalau valid
     const book = await findById(id);
-    await book.update(updateData);
+    await book.update(value); // gunakan value hasil validasi
     return book;
   } catch (error) {
     throw error;
