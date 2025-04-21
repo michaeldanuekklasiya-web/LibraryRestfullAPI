@@ -192,7 +192,7 @@ https://localhost:3000/api/v1
 ```Response
 {
     "status": false,
-    "message": "Get All Data Book",
+    "message": "Data added successfully",
     "data": [
         {
             "id": 1,
