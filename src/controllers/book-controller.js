@@ -6,7 +6,7 @@ const uploadBook = async (req, res) => {
     const newBook = await bookService.create(bookData);
 
     return res.status(201).json({
-      status_code: 201,
+      error: false,
       message: "Data Added Successfully",
       data: newBook,
     });
@@ -26,8 +26,8 @@ const updateBook = async (req, res) => {
     const updatedBook = await bookService.update(id, newData);
 
     return res.status(200).json({
-      status_code: 200,
-      message: "Book updated successfully",
+      error: false,
+      message: "Data updated successfully",
       data: updatedBook,
     });
   } catch (error) {
@@ -45,8 +45,8 @@ const deleteBook = async (req, res) => {
     const deletedBook = await bookService.remove(id);
 
     return res.status(200).json({
-      status_code: 200,
-      message: "Book deleted successfully",
+      error: false,
+      message: "Data deleted successfully",
       data: deletedBook,
     });
   } catch (error) {
@@ -64,15 +64,21 @@ const getAllBook = async (req, res) => {
       title: req.query.title || null,
       author: req.query.author || null,
       year_published: req.query.year || null,
-      category: req.query.category || null
+      category: req.query.category || null,
     };
 
     const books = await bookService.findAll(filters);
 
     return res.status(200).json({
-      status_code: 200,
-      message: "Books fetched successfully",
+      error: false,
+      message: "Data retrieved successfully",
       data: books,
+      pagination: {
+        total_record: books.length,
+        page: req.query.page || 1,
+        limit: req.query.limit || 10,
+        totalPages: Math.ceil(books.length / (req.query.limit || 10)),
+      },
     });
   } catch (error) {
     return res.status(404).json({
@@ -88,8 +94,8 @@ const getBookById = async (req, res) => {
     const { id } = req.params;
     const book = await bookService.findById(id);
     return res.status(200).json({
-      status_code: 200,
-      message: "Book fetched successfully",
+      error: false,
+      message: "Data retrieved successfully",
       data: book,
     });
   } catch (error) {

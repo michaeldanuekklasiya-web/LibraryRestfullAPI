@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
+import Book from "./Book.js";
 
 const Collection = sequelize.define(
   "Collection",
@@ -25,4 +26,8 @@ const Collection = sequelize.define(
   }
 );
 
+Collection.belongsTo(Book, {
+  foreignKey: "book_id",
+  as: "book",
+});
 export default Collection;

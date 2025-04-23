@@ -33,6 +33,6 @@ apiRouter.delete("/books/:id", bookController.deleteBook);
 apiRouter.post("/collections", collectionController.createCollection);
 apiRouter.get("/collections", collectionController.getAllCollections);
 apiRouter.delete("/collections/:id", collectionController.deleteCollectionById);
-apiRouter.delete("/collections", collectionController.deleteCollectionByUserAndBook);
+// apiRouter.delete("/collections", collectionController.deleteCollectionByUserAndBook);
 
 export { apiRouter };
