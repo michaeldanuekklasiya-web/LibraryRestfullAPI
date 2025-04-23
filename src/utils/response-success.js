@@ -1,6 +1,6 @@
 class ResponseSuccess {
-  constructor(error, message, data = null, pagination = null) {
-    this.error = error;
+  constructor(message, data = null, pagination = null) {
+    this.error = false;
     this.message = message;
     this.data = data;
     if (pagination) {
@@ -9,15 +9,24 @@ class ResponseSuccess {
   }
 
   static ok(message, data = null, pagination = null) {
-    return new ResponseSuccess(false, message, data, pagination);
+    return {
+      statusCode: 200,
+      body: new ResponseSuccess(message, data, pagination),
+    };
   }
 
   static created(message, data = null, pagination = null) {
-    return new ResponseSuccess(false, message, data, pagination);
+    return {
+      statusCode: 201,
+      body: new ResponseSuccess(message, data, pagination),
+    };
   }
 
   static noContent(message = "No content") {
-    return new ResponseSuccess(false, message);
+    return {
+      statusCode: 204,
+      body: new ResponseSuccess(message),
+    };
   }
 }
 

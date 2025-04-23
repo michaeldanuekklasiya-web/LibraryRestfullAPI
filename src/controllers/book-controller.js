@@ -2,46 +2,40 @@ import bookService from "../services/book-service.js";
 import ResponseSuccess from "../utils/response-success.js";
 import { formatBookData } from "../utils/helper.js";
 
-const uploadBook = async (req, res) => {
+const uploadBook = async (req, res, next) => {
   try {
     const bookData = req.body;
     const newBook = await bookService.create(bookData);
     console.error(newBook);
     const response = ResponseSuccess.created("Data added successfully", formatBookData(newBook));
 
-    return res.status(response.status).json(response);
+    return res.status(response.statusCode).json(response.body);
   } catch (error) {
     next(error);
   }
 };
 
-const updateBook = async (req, res) => {
+const updateBook = async (req, res, next) => {
   try {
     const { id } = req.params;
     const newData = req.body;
     const updatedBook = await bookService.update(id, newData);
-    const response = ResponseSuccess.created(
-      "Data updated successfully",
-      formatBookData(updatedBook)
-    );
+    const response = ResponseSuccess.ok("Data updated successfully", formatBookData(updatedBook));
 
-    return res.status(response.status).json(response);
+    return res.status(response.statusCode).json(response.body);
   } catch (error) {
     next(error);
   }
 };
 
-const deleteBook = async (req, res) => {
+const deleteBook = async (req, res, next) => {
   try {
     const { id } = req.params;
     const deletedBook = await bookService.remove(id);
 
-    const response = ResponseSuccess.created(
-      "Data deleted successfully",
-      formatBookData(deletedBook)
-    );
+    const response = ResponseSuccess.ok("Data deleted successfully", formatBookData(deletedBook));
 
-    return res.status(response.status).json(response);
+    return res.status(response.statusCode).json(response.body);
   } catch (error) {
     next(error);
   }
@@ -85,27 +79,21 @@ const getAllBook = async (req, res, next) => {
     // console.log("Total Pages:", totalPages);
 
     // Kirim response dengan data buku dan pagination
-    const response = ResponseSuccess.created(
-      "Data retrieved successfully",
-      formattedBooks,
-      pagination
-    );
+    const response = ResponseSuccess.ok("Data retrieved successfully", formattedBooks, pagination);
 
-    return res.status(response.status).json(response);
+    return res.status(response.statusCode).json(response.body);
   } catch (error) {
     next(error); // Pass error to the next middleware (error handler)
   }
 };
 
-const getBookById = async (req, res) => {
+const getBookById = async (req, res, next) => {
   try {
     const { id } = req.params;
     const book = await bookService.findById(id);
-    const response = ResponseSuccess.created("Data retrieved successfully", {
-      user: formatUserData(book),
-    });
+    const response = ResponseSuccess.ok("Data retrieved successfully", formatBookData(book));
 
-    return res.status(response.status).json(response);
+    return res.status(response.statusCode).json(response.body);
   } catch (error) {
     next(error);
   }

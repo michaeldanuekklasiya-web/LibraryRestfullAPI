@@ -4,14 +4,17 @@ import { formatCollectionData } from "../utils/helper.js";
 
 const createCollection = async (req, res, next) => {
   try {
-    const collection = await collectionService.create(req.body);
+    const userId = req.user.id;
+    const data = { ...req.body, user_id: userId };
+
+    const collection = await collectionService.create(data);
 
     const response = ResponseSuccess.created(
       "Data added successfully",
       formatCollectionData(collection.book)
     );
 
-    return res.status(response.status).json(response);
+    return res.status(response.statusCode).json(response.body);
   } catch (error) {
     next(error);
   }
@@ -19,11 +22,12 @@ const createCollection = async (req, res, next) => {
 
 const getAllCollections = async (req, res, next) => {
   try {
+    const userId = req.user.id;
     const limit = parseInt(req.query.limit) || 10;
     const page = parseInt(req.query.page) || 1;
     const offset = (page - 1) * limit;
-
-    const { books, total_record } = await collectionService.findAll(limit, offset);
+    console.log(userId);
+    const { books, total_record } = await collectionService.findAll(userId, limit, offset);
 
     const formattedCollections = books.map(formatCollectionData);
 
@@ -44,18 +48,26 @@ const getAllCollections = async (req, res, next) => {
   }
 };
 
-const deleteCollectionById = async (req, res) => {
+const deleteCollectionById = async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log("ID dari param:", id);
 
-    const result = await collectionService.deleteById(id);
+    const userIdFromToken = req.user?.id;
+    console.log("User ID dari token:", userIdFromToken);
 
-    return res.status(200).json({
-      error: false,
-      message: result.message,
-      data: result.data,
-    });
+    if (!userIdFromToken) {
+      return next(ResponseError.unauthorized("Invalid token"));
+    }
+
+    // Panggil service untuk menghapus koleksi berdasarkan ID dan user_id
+    const result = await collectionService.deleteById(id, userIdFromToken);
+    console.log("Hasil delete:", result);
+
+    const response = ResponseSuccess.ok("Collection deleted successfully", result?.data || null);
+    return res.status(response.statusCode).json(response.body);
   } catch (error) {
+    console.error("DELETE ERROR:", error);
     next(error);
   }
 };

@@ -10,7 +10,7 @@ const register = async (request) => {
   const { name, email, password } = validate(registerUserValidation, request);
 
   const existingUser = await User.findOne({ where: { email } });
-  if (existingUser) throw ResponseError.badRequest("Email already registered");
+  if (existingUser) throw ResponseError.conflict("Email already registered");
 
   const passwordHash = await bcryptjs.hash(password, 10);
 
