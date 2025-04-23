@@ -53,21 +53,19 @@ const findAll = async (query = {}, limit, offset) => {
     where.year_published = parseInt(query.year_published, 10);
   }
 
-  // Menggunakan findAndCountAll untuk mendapatkan jumlah total record dan data buku yang sesuai dengan limit dan offset
   const { count: total_record, rows: books } = await Book.findAndCountAll({
     where,
     limit,
     offset,
   });
 
-  return { books, total_record }; // Pastikan mengembalikan kedua data ini
+  return { books, total_record };
 };
 
 const findById = async (id) => {
   if (!id || isNaN(id)) throw ResponseError.badRequest("Invalid ID");
 
   const book = await Book.findByPk(id);
-
   if (!book) throw ResponseError.notFound("Book not found");
 
   return book;
@@ -79,6 +77,7 @@ const update = async (id, updateData) => {
 
   const book = await findById(id);
   await book.update(value);
+  
   return book;
 };
 

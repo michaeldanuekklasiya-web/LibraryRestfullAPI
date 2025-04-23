@@ -12,7 +12,6 @@ https://localhost:3000/api/v1
 - Headers
     - `Authorization`: `Bearer <token>`
 - Request Body
-    - user_id as integer
     - book_id as integer
 ```Response
 {
