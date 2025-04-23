@@ -5,17 +5,13 @@ const uploadBook = async (req, res) => {
     const bookData = req.body;
     const newBook = await bookService.create(bookData);
 
-    return res.status(201).json({
-      error: false,
-      message: "Data Added Successfully",
-      data: newBook,
+    const response = ResponseSuccess.created("Data added successfully", {
+      user: formatUserData(newBook),
     });
+
+    return res.status(response.status).json(response);
   } catch (error) {
-    return res.status(500).json({
-      status_code: 500,
-      message: "Internal Server Error",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
@@ -24,18 +20,13 @@ const updateBook = async (req, res) => {
     const { id } = req.params;
     const newData = req.body;
     const updatedBook = await bookService.update(id, newData);
+    const response = ResponseSuccess.created("Data updated successfully", {
+      user: formatUserData(updatedBook),
+    });
 
-    return res.status(200).json({
-      error: false,
-      message: "Data updated successfully",
-      data: updatedBook,
-    });
+    return res.status(response.status).json(response);
   } catch (error) {
-    return res.status(404).json({
-      status_code: 404,
-      message: "Book not found",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
@@ -44,17 +35,13 @@ const deleteBook = async (req, res) => {
     const { id } = req.params;
     const deletedBook = await bookService.remove(id);
 
-    return res.status(200).json({
-      error: false,
-      message: "Data deleted successfully",
-      data: deletedBook,
+    const response = ResponseSuccess.created("Data deleted successfully", {
+      user: formatUserData(deletedBook),
     });
+
+    return res.status(response.status).json(response);
   } catch (error) {
-    return res.status(404).json({
-      status_code: 404,
-      message: "Book not found",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
@@ -68,11 +55,8 @@ const getAllBook = async (req, res) => {
     };
 
     const books = await bookService.findAll(filters);
-
-    return res.status(200).json({
-      error: false,
-      message: "Data retrieved successfully",
-      data: books,
+    const response = ResponseSuccess.created("Data retrieved successfully", {
+      user: formatUserData(books),
       pagination: {
         total_record: books.length,
         page: req.query.page || 1,
@@ -80,12 +64,10 @@ const getAllBook = async (req, res) => {
         totalPages: Math.ceil(books.length / (req.query.limit || 10)),
       },
     });
+
+    return res.status(response.status).json(response);
   } catch (error) {
-    return res.status(404).json({
-      status_code: 404,
-      message: "Book not found",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
@@ -93,17 +75,13 @@ const getBookById = async (req, res) => {
   try {
     const { id } = req.params;
     const book = await bookService.findById(id);
-    return res.status(200).json({
-      error: false,
-      message: "Data retrieved successfully",
-      data: book,
+    const response = ResponseSuccess.created("Data retrieved successfully", {
+      user: formatUserData(book),
     });
+
+    return res.status(response.status).json(response);
   } catch (error) {
-    return res.status(404).json({
-      status_code: 404,
-      message: "Book not found",
-      error: error.message,
-    });
+    next(error);
   }
 };
 

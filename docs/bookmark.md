@@ -77,7 +77,7 @@ https://localhost:3000/api/v1
         "book_title": "The Future of Artificial Intelligence",
         "book_author": "Sarah Williams",
         "book_category": "Article",
-        "book_created_at": "2025-04-10T02:25:12.350Z"
+        "book_date": "2023-11-22T00:00:00.000Z"
     }
 }
 ```

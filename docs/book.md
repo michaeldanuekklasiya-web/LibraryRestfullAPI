@@ -192,11 +192,7 @@ https://localhost:3000/api/v1
 ```Response
 {
     "status": false,
-<<<<<<< HEAD
-    "message": "Data added successfully",
-=======
     "message": "Data retrieved successfully"
->>>>>>> 591c6023abc96d28a1db232737c7f1662c9d4805
     "data": [
         {
             "id": 1,
