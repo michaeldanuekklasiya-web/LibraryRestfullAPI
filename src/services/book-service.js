@@ -3,108 +3,86 @@ import { Op } from "sequelize";
 import { isDefined } from "../utils/helper.js";
 import { validate } from "../validation/validation.js";
 import { bookValidation, updateBookValidation } from "../validation/book-validation.js";
-import { request } from "express";
+import ResponseError from "../utils/response-error.js";
 
 const create = async (request) => {
-  try {
-    const {
-      title,
-      author,
-      date,
-      category,
-      image,
-      description,
-      publisher,
-      year_published,
-      page_count,
-      format,
-      doi,
-    } = validate(bookValidation, request);
+  const {
+    title,
+    author,
+    date,
+    category,
+    image,
+    description,
+    publisher,
+    year_published,
+    page_count,
+    format,
+    doi,
+  } = validate(bookValidation, request);
 
-    const newBook = await Book.create({
-      title,
-      author,
-      date,
-      category,
-      image,
-      description,
-      publisher,
-      year_published,
-      page_count,
-      format,
-      doi,
-    });
+  const newBook = await Book.create({
+    title,
+    author,
+    date,
+    category,
+    image,
+    description,
+    publisher,
+    year_published,
+    page_count,
+    format,
+    doi,
+  });
 
-    if (!newBook) throw new Error("Failed to create book");
+  if (!newBook) throw ResponseError.badRequest("Failed to create book");
 
-    return newBook;
-  } catch (error) {
-    throw error;
-  }
+  return newBook;
 };
 
 const findAll = async (query = {}) => {
-  try {
-    const where = {};
+  const where = {};
 
-    const likeFields = ["title", "author", "category"];
-    likeFields.forEach((field) => {
-      if (isDefined(query[field])) {
-        where[field] = { [Op.iLike]: `%${query[field]}%` };
-      }
-    });
-
-    if (isDefined(query.year_published) && !isNaN(query.year_published)) {
-      where.year_published = parseInt(query.year_published, 10);
+  const likeFields = ["title", "author", "category"];
+  likeFields.forEach((field) => {
+    if (isDefined(query[field])) {
+      where[field] = { [Op.iLike]: `%${query[field]}%` };
     }
+  });
 
-    const books = await Book.findAll({ where });
-    if (!books.length) throw new Error("Book not found");
-
-    return books;
-  } catch (error) {
-    throw error;
+  if (isDefined(query.year_published) && !isNaN(query.year_published)) {
+    where.year_published = parseInt(query.year_published, 10);
   }
+
+  const books = await Book.findAll({ where });
+
+  if (!books.length) throw ResponseError.notFound("Book not found");
+
+  return books;
 };
 
 const findById = async (id) => {
-  try {
-    if (!id || isNaN(id)) throw new Error("Invalid ID");
+  if (!id || isNaN(id)) throw ResponseError.badRequest("Invalid ID");
 
-    const book = await Book.findByPk(id);
-    if (!book) throw new Error("Book not found");
+  const book = await Book.findByPk(id);
 
-    return book;
-  } catch (error) {
-    throw error;
-  }
+  if (!book) throw ResponseError.notFound("Book not found");
+
+  return book;
 };
 
 const update = async (id, updateData) => {
-  try {
-    // Validasi input dulu
-    const { error, value } = updateBookValidation.validate(updateData);
-    if (error) {
-      throw new Error(`Validation error: ${error.details[0].message}`);
-    }
+  const { error, value } = updateBookValidation.validate(updateData);
+  if (error) throw ResponseError.badRequest(`Validation error: ${error.details[0].message}`);
 
-    // Lanjut update kalau valid
-    const book = await findById(id);
-    await book.update(value); // gunakan value hasil validasi
-    return book;
-  } catch (error) {
-    throw error;
-  }
+  const book = await findById(id);
+  await book.update(value);
+  return book;
 };
 
 const remove = async (id) => {
-  try {
-    const book = await findById(id);
-    await book.destroy();
-    return book;
-  } catch (error) {
-    throw error;
-  }
+  const book = await findById(id);
+  await book.destroy();
+  return book;
 };
 
 export default {
@@ -113,4 +91,4 @@ export default {
   findById,
   update,
   remove,
-};
+};gi
