@@ -1,8 +1,6 @@
-import { Op } from "sequelize";
 import Collection from "../models/Collection.js";
 import Book from "../models/Book.js";
 import ResponseError from "../utils/response-error.js";
-import { isDefined } from "../utils/helper.js";
 
 const create = async (request) => {
   const { user_id, book_id } = request;
@@ -17,8 +15,7 @@ const create = async (request) => {
     where: { user_id, book_id },
   });
 
-  if (existingCollection)
-    throw ResponseError.conflict("This book is already bookmarked by the user");
+  if (existingCollection) throw ResponseError.conflict("This book is already bookmarked by the user");
 
   const collection = await Collection.create({ user_id, book_id });
 
@@ -37,19 +34,16 @@ const create = async (request) => {
 };
 
 const findAll = async (limit, offset) => {
-  // Ambil semua book_id dari Collection
   const collections = await Collection.findAll({
     attributes: ["book_id"],
   });
 
-  // Ubah jadi array of id
   const bookIds = collections.map((c) => c.book_id);
 
   if (bookIds.length === 0) {
     return { books: [], total_record: 0 };
   }
 
-  // Cari semua buku berdasarkan id dari collection dengan pagination
   const { count: total_record, rows: books } = await Book.findAndCountAll({
     where: {
       id: bookIds,

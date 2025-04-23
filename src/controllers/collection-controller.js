@@ -2,7 +2,7 @@ import collectionService from "../services/collection-service.js";
 import ResponseSuccess from "../utils/response-success.js";
 import { formatCollectionData } from "../utils/helper.js";
 
-const createCollection = async (req, res) => {
+const createCollection = async (req, res, next) => {
   try {
     const collection = await collectionService.create(req.body);
 
@@ -13,7 +13,6 @@ const createCollection = async (req, res) => {
 
     return res.status(response.status).json(response);
   } catch (error) {
-    console.error(error instanceof ResponseError); // Log the error for debugging
     next(error);
   }
 };
@@ -60,32 +59,6 @@ const deleteCollectionById = async (req, res) => {
     next(error);
   }
 };
-
-// const deleteCollectionByUserAndBook = async (req, res) => {
-//   try {
-//     const { user_id, book_id } = req.query;
-
-//     const deleted = await collectionService.deleteByUserAndBook(user_id, book_id);
-
-//     if (deleted === 0) {
-//       return res.status(404).json({
-//         status_code: 404,
-//         message: "Collection not found for the given user_id and book_id",
-//       });
-//     }
-
-//     return res.status(200).json({
-//       error: false,
-//       message: "Collection deleted successfully",
-//     });
-//   } catch (error) {
-//     return res.status(500).json({
-//       status_code: 500,
-//       message: "Internal Server Error",
-//       error: error.message,
-//     });
-//   }
-// };
 
 export default {
   createCollection,

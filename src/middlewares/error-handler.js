@@ -1,7 +1,6 @@
 import ResponseError from "../utils/response-error.js";
 
 const errorMiddleware = (err, req, res, next) => {
-  console.error(err instanceof ResponseError); // Log the error for debugging
   if (!err) {
     return next();
   }
