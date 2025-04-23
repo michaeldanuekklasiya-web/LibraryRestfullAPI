@@ -39,7 +39,7 @@ const create = async (request) => {
   return newBook;
 };
 
-const findAll = async (query = {}) => {
+const findAll = async (query = {}, limit, offset) => {
   const where = {};
 
   const likeFields = ["title", "author", "category"];
@@ -53,11 +53,14 @@ const findAll = async (query = {}) => {
     where.year_published = parseInt(query.year_published, 10);
   }
 
-  const books = await Book.findAll({ where });
+  // Menggunakan findAndCountAll untuk mendapatkan jumlah total record dan data buku yang sesuai dengan limit dan offset
+  const { count: total_record, rows: books } = await Book.findAndCountAll({
+    where,
+    limit,
+    offset,
+  });
 
-  if (!books.length) throw ResponseError.notFound("Book not found");
-
-  return books;
+  return { books, total_record }; // Pastikan mengembalikan kedua data ini
 };
 
 const findById = async (id) => {
@@ -91,4 +94,4 @@ export default {
   findById,
   update,
   remove,
-};gi
+};
