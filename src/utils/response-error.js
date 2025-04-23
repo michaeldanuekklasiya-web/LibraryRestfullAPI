@@ -16,9 +16,11 @@ class ResponseError extends Error {
   static forbidden(message = "Forbidden", errors = null) {
     return new ResponseError(403, message, errors);
   }
-
   static notFound(message = "Not Found", errors = null) {
     return new ResponseError(404, message, errors);
+  }
+  static conflict(message = "Conflict", errors = null) {
+    return new ResponseError(409, message, errors);
   }
 }
 

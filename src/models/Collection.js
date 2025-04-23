@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
-import Book from "./Book.js";
+import Book from "./Book.js"; // Pastikan Book diimpor dengan benar
 
 const Collection = sequelize.define(
   "Collection",
@@ -26,8 +26,10 @@ const Collection = sequelize.define(
   }
 );
 
+// Relasi dengan model Book
 Collection.belongsTo(Book, {
   foreignKey: "book_id",
   as: "book",
 });
+
 export default Collection;

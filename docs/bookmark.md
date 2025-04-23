@@ -19,9 +19,11 @@ https://localhost:3000/api/v1
     "error": false,
     "message": "Successfully saved book to collection",
     "data": {
-        "id": 1,
-        "user_id": 1,
-        "book_id": 2
+        "book_id": 3,
+        "book_title": "Deep Learning for Climate Change",
+        "book_author": "Carlos Mendes",
+        "book_category": "Journal",
+        "book_date": "2023-11-22T00:00:00.000Z"
     }
 }
 ```
@@ -41,12 +43,10 @@ https://localhost:3000/api/v1
     "message": "Collection data retrieved successfully",
     "data": [
         {
-            "id": 3,
-            "user_id": 1,
-            "book_id": 2,
-            "book_title": "The Future of Artificial Intelligence",
-            "book_author": "Sarah Williams",
-            "book_category": "Article",
+            "book_id": 3,
+            "book_title": "Deep Learning for Climate Change",
+            "book_author": "Carlos Mendes",
+            "book_category": "Journal",
             "book_date": "2023-11-22T00:00:00.000Z"
         }
     ],

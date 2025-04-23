@@ -1,6 +1,7 @@
-import ResponseError from '../utils/response-error.js';
+import ResponseError from "../utils/response-error.js";
 
 const errorMiddleware = (err, req, res, next) => {
+  console.error(err instanceof ResponseError); // Log the error for debugging
   if (!err) {
     return next();
   }
@@ -9,13 +10,13 @@ const errorMiddleware = (err, req, res, next) => {
     return res.status(err.status).json({
       error: true,
       message: err.message,
-      ...(err.errors && { errors: err.errors })
+      ...(err.errors && { errors: err.errors }),
     });
   }
 
   return res.status(500).json({
     error: true,
-    message: 'Internal Server Error',
+    message: "Internal Server Error",
   });
 };
 

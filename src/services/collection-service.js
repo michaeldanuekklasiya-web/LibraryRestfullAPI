@@ -1,29 +1,64 @@
+import { Op } from "sequelize";
 import Collection from "../models/Collection.js";
 import Book from "../models/Book.js";
 import ResponseError from "../utils/response-error.js";
+import { isDefined } from "../utils/helper.js";
 
 const create = async (request) => {
   const { user_id, book_id } = request;
 
-  if (!user_id || !book_id) throw ResponseError.badRequest("user_id and book_id are required");
+  if (!user_id || !book_id) {
+    throw ResponseError.badRequest("user_id and book_id are required");
+  }
+
+  const bookExists = await Book.findByPk(book_id);
+  if (!bookExists) throw ResponseError.notFound("Book not found");
+  const existingCollection = await Collection.findOne({
+    where: { user_id, book_id },
+  });
+
+  if (existingCollection)
+    throw ResponseError.conflict("This book is already bookmarked by the user");
 
   const collection = await Collection.create({ user_id, book_id });
-  return collection;
-};
 
-const findAll = async () => {
-  const collections = await Collection.findAll({
+  const createdCollection = await Collection.findOne({
+    where: { id: collection.id },
     include: [
       {
         model: Book,
         as: "book",
-        attributes: ["title", "author", "category", "date"],
+        attributes: ["id", "title", "author", "category", "date"],
       },
     ],
-    order: [["id", "DESC"]],
   });
 
-  return collections;
+  return createdCollection;
+};
+
+const findAll = async (limit, offset) => {
+  // Ambil semua book_id dari Collection
+  const collections = await Collection.findAll({
+    attributes: ["book_id"],
+  });
+
+  // Ubah jadi array of id
+  const bookIds = collections.map((c) => c.book_id);
+
+  if (bookIds.length === 0) {
+    return { books: [], total_record: 0 };
+  }
+
+  // Cari semua buku berdasarkan id dari collection dengan pagination
+  const { count: total_record, rows: books } = await Book.findAndCountAll({
+    where: {
+      id: bookIds,
+    },
+    limit,
+    offset,
+  });
+
+  return { books, total_record };
 };
 
 const deleteById = async (id) => {

@@ -27,6 +27,16 @@ const formatBookData = (book) => {
   };
 };
 
+const formatCollectionData = (collection) => {
+  return {
+    book_id: collection.id,
+    book_title: collection.title,
+    book_author: collection.author,
+    book_category: collection.category,
+    book_date: collection.date,
+  };
+};
+
 const formatPagination = (total_record, page, limit) => {
   const total_pages = Math.ceil(total_record / limit);
   return {
@@ -37,4 +47,4 @@ const formatPagination = (total_record, page, limit) => {
   };
 };
 
-export { isDefined, formatUserData, formatBookData, formatPagination };
+export { isDefined, formatUserData, formatBookData, formatPagination, formatCollectionData };

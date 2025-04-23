@@ -1,54 +1,47 @@
 import collectionService from "../services/collection-service.js";
+import ResponseSuccess from "../utils/response-success.js";
+import { formatCollectionData } from "../utils/helper.js";
 
 const createCollection = async (req, res) => {
   try {
     const collection = await collectionService.create(req.body);
 
-    return res.status(201).json({
-      error: false,
-      message: "Successfully saved book to collection",
-      data: collection,
-    });
+    const response = ResponseSuccess.created(
+      "Data added successfully",
+      formatCollectionData(collection.book)
+    );
+
+    return res.status(response.status).json(response);
   } catch (error) {
-    return res.status(500).json({
-      status_code: 500,
-      message: "Internal Server Error",
-      error: error.message,
-    });
+    console.error(error instanceof ResponseError); // Log the error for debugging
+    next(error);
   }
 };
 
-const getAllCollections = async (req, res) => {
+const getAllCollections = async (req, res, next) => {
   try {
-    const collections = await collectionService.findAll();
+    const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(req.query.page) || 1;
+    const offset = (page - 1) * limit;
 
-    const formattedCollections = collections.map((item) => ({
-      id: item.id,
-      user_id: item.user_id,
-      book_id: item.book_id,
-      book_title: item.book.title,
-      book_author: item.book.author,
-      book_category: item.book.category,
-      book_date: item.book.date,
-    }));
+    const { books, total_record } = await collectionService.findAll(limit, offset);
+
+    const formattedCollections = books.map(formatCollectionData);
 
     return res.status(200).json({
       error: false,
       message: "Collection data retrieved successfully",
       data: formattedCollections,
       pagination: {
-        total_record: collections.length,
-        page: req.query.page || 1,
-        limit: req.query.limit || 10,
-        totalPages: Math.ceil(collections.length / (req.query.limit || 10)),
+        total_record,
+        page,
+        limit,
+        total_pages: Math.ceil(total_record / limit),
       },
     });
   } catch (error) {
-    return res.status(500).json({
-      status_code: 500,
-      message: "Internal Server Error",
-      error: error.message,
-    });
+    console.error("Error fetching collections:", error);
+    next(error);
   }
 };
 
@@ -64,11 +57,7 @@ const deleteCollectionById = async (req, res) => {
       data: result.data,
     });
   } catch (error) {
-    const status = error.message === "Collection not found" ? 404 : 500;
-    return res.status(status).json({
-      error: true,
-      message: error.message || "Internal Server Error",
-    });
+    next(error);
   }
 };
 
