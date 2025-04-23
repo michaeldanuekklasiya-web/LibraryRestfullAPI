@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
 import authService from "../services/auth-service.js";
 import ResponseSuccess from '../utils/response-success.js';
+import ResponseError from '../utils/response-error.js';
 import { formatUserData } from '../utils/helper.js';
 
-const registerUser = async (req, res) => {
+const registerUser = async (req, res, next) => {
   try {
     const user = await authService.register(req.body);
 
@@ -13,16 +14,14 @@ const registerUser = async (req, res) => {
 
     return res.status(response.status).json(response);
   } catch (error) {
-    return res.status(500).json({
-      error: true,
-      message: error.message || "Internal Server Error"
-    });
+    next(error);
   }
 };
 
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
   try {
     const user = await authService.login(req.body);
+
     const { accessToken, refreshToken } = await authService.generateTokens(user);
 
     const response = ResponseSuccess.ok("User login successfully", {
@@ -33,39 +32,29 @@ const loginUser = async (req, res) => {
 
     return res.status(response.status).json(response);
   } catch (error) {
-    return res.status(401).json({
-      error: true,
-      message: error.message || "Login failed"
-    });
+    next(error);
   }
 };
 
-const logoutUser = async (req, res) => {
-
+const logoutUser = async (req, res, next) => {
   try {
-    const user = await authService.logout(decoded);
+    const user = await authService.logout(req.user);
 
     const response = ResponseSuccess.ok("User logout successfully", {
       user: formatUserData(user)
-    })
+    });
 
     return res.status(response.status).json(response);
   } catch (error) {
-    return res.status(500).json({
-      error: true,
-      message: "Internal Server Error",
-    });
+    next(error);
   }
 };
 
-const refreshAccessToken = async (req, res) => {
+const refreshAccessToken = async (req, res, next) => {
   const { refreshToken } = req.body;
 
   if (!refreshToken) {
-    return res.status(401).json({
-      error: true,
-      message: "Refresh token not provided",
-    });
+    return next(ResponseError.unauthorized("Refresh token not provided"));
   }
 
   try {
@@ -89,11 +78,7 @@ const refreshAccessToken = async (req, res) => {
 
     return res.status(response.status).json(response);
   } catch (error) {
-    console.error(error);
-    return res.status(401).json({
-      error: true,
-      message: error.message || "Failed to refresh access token",
-    });
+    next(error);
   }
 };
 
