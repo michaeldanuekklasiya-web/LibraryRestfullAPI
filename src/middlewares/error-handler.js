@@ -1,9 +1,22 @@
-const errorHandler = (err, req, res, next) => {
-  const status = err.status || 500;
-  res.status(status).json({
+import ResponseError from '../utils/response-error.js';
+
+const errorMiddleware = (err, req, res, next) => {
+  if (!err) {
+    return next();
+  }
+
+  if (err instanceof ResponseError) {
+    return res.status(err.status).json({
+      error: true,
+      message: err.message,
+      ...(err.errors && { errors: err.errors })
+    });
+  }
+
+  return res.status(500).json({
     error: true,
-    message: err.message || "Internal Server Error",
+    message: 'Internal Server Error',
   });
 };
 
-export default errorHandler;
+export default errorMiddleware;
