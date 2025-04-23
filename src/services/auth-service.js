@@ -4,78 +4,64 @@ import { validate } from "../validation/validation.js";
 import { registerUserValidation, loginUserValidation } from "../validation/user-validation.js";
 import User from "../models/User.js";
 import RefreshToken from "../models/RefreshToken.js";
+import ResponseError from "../utils/response-error.js";
 
 const register = async (request) => {
-  try {
-    const { name, email, password } = validate(registerUserValidation, request);
+  const { name, email, password } = validate(registerUserValidation, request);
 
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) throw new Error("Email already registered");
+  const existingUser = await User.findOne({ where: { email } });
+  if (existingUser) throw ResponseError.badRequest("Email already registered");
 
-    const passwordHash = await bcryptjs.hash(password, 10);
+  const passwordHash = await bcryptjs.hash(password, 10);
 
-    const user = await User.create({
-      name,
-      email,
-      password: passwordHash,
-    });
+  const user = await User.create({
+    name,
+    email,
+    password: passwordHash,
+  });
 
-    return user;
-  } catch (error) {
-    throw new Error(error.message || "Failed to register user");
-  }
+  return user;
 };
 
 const login = async (request) => {
-  try {
-    const { email, password } = validate(loginUserValidation, request);
+  const { email, password } = validate(loginUserValidation, request);
 
-    const user = await User.findOne({ where: { email } });
-    if (!user) throw new Error("Invalid email or password");
+  const user = await User.findOne({ where: { email } });
+  if (!user) throw ResponseError.unauthorized("Invalid email or password");
 
-    const passwordMatch = await bcryptjs.compare(password, user.password);
-    if (!passwordMatch) throw new Error("Invalid email or password");
+  const passwordMatch = await bcryptjs.compare(password, user.password);
+  if (!passwordMatch) throw ResponseError.unauthorized("Invalid email or password");
 
-    return user;
-  } catch (error) {
-    throw new Error(error.message || "Failed to login");
-  }
+  return user;
 };
 
 const logout = async (decoded) => {
-  try {
-    await RefreshToken.destroy({
-      where: {
-        userId: decoded.id,
-      },
-    });
+  await RefreshToken.destroy({
+    where: {
+      userId: decoded.id,
+    },
+  });
 
-    const existingUser = await User.findByPk(decoded.id);
-    if (!existingUser) throw new Error("Invalid email or password");
+  const existingUser = await User.findByPk(decoded.id);
+  if (!existingUser) throw ResponseError.unauthorized("User not found");
 
-    return existingUser;
-  } catch (error) {
-    throw new Error(error.message || "Logout failed");
-  }
+  return existingUser;
 };
 
 const refresh = async (decoded, refreshToken) => {
-  try {
-    const tokenRecord = await RefreshToken.findOne({
-      where: {
-        token: refreshToken,
-        userId: decoded.id,
-      },
-    });
-    if (!tokenRecord) throw new Error("Invalid or expired refresh token");
+  const tokenRecord = await RefreshToken.findOne({
+    where: {
+      token: refreshToken,
+      userId: decoded.id,
+    },
+  });
 
-    const existingUser = await User.findByPk(decoded.id);
-    if (!existingUser) throw new Error("User not found");
+  if (!tokenRecord) throw ResponseError.unauthorized("Invalid or expired refresh token");
 
-    return existingUser;
-  } catch (error) {
-    throw new Error(error.message || "Refresh failed");
-  }
+  const existingUser = await User.findByPk(decoded.id);
+  if (!existingUser) throw ResponseError.notFound("User not found");
+
+  return existingUser;
 };
 
 const generateTokens = async (user) => {
