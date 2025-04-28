@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import UserSession from "../models/UserSession.js";
-import ResponseError from "../utils/response-error.js";
+import ResponseError from "../utils/response.error.js";
 
 const authMiddleware = async (req, res, next) => {
   try {
