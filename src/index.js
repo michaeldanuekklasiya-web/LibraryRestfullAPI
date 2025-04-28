@@ -4,7 +4,7 @@ import cors from "cors";
 import { publicRouter } from "./routes/public-api.js";
 import { apiRouter } from "./routes/api.js";
 import sequelize from "./config/db.js";
-import errorMiddleware from "./middlewares/error-handler.js";
+import errorMiddleware from "./middlewares/error.handler.js";
 
 dotenv.config();
 

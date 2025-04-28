@@ -1,8 +1,8 @@
 import express from "express";
-import userController from "../controllers/auth-controller.js";
-import bookController from "../controllers/book-controller.js";
-import collectionController from "../controllers/collection-controller.js";
-import authenticateToken from "../middlewares/auth-middleware.js";
+import userController from "../controllers/auth.controller.js";
+import bookController from "../controllers/book.controller.js";
+import collectionController from "../controllers/collection.controller.js";
+import authenticateToken from "../middlewares/auth.middleware.js";
 
 const apiRouter = new express.Router();
 apiRouter.use(authenticateToken);

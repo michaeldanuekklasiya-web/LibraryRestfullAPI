@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import ResponseError from "../utils/response-error.js";
+import ResponseError from "../utils/response.error.js";
 
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers.authorization;

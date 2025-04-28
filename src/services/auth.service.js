@@ -1,10 +1,10 @@
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { validate } from "../validation/validation.js";
-import { registerUserValidation, loginUserValidation } from "../validation/user-validation.js";
+import { registerUserValidation, loginUserValidation } from "../validation/user.validation.js";
 import User from "../models/User.js";
 import RefreshToken from "../models/RefreshToken.js";
-import ResponseError from "../utils/response-error.js";
+import ResponseError from "../utils/response.error.js";
 
 const register = async (request) => {
   const { name, email, password } = validate(registerUserValidation, request);

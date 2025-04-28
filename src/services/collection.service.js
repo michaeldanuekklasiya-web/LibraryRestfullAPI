@@ -1,6 +1,6 @@
 import Collection from "../models/Collection.js";
 import Book from "../models/Book.js";
-import ResponseError from "../utils/response-error.js";
+import ResponseError from "../utils/response.error.js";
 
 const create = async (request) => {
   const { user_id, book_id } = request;

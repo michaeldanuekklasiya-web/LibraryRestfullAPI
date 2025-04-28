@@ -1,6 +1,6 @@
 import express from "express";
-import healthController from "../controllers/health-controller.js";
-import userController from "../controllers/auth-controller.js";
+import healthController from "../controllers/health.controller.js";
+import userController from "../controllers/auth.controller.js";
 
 const publicRouter = new express.Router();
 

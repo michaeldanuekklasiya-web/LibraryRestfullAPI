@@ -2,8 +2,8 @@ import Book from "../models/Book.js";
 import { Op } from "sequelize";
 import { isDefined } from "../utils/helper.js";
 import { validate } from "../validation/validation.js";
-import { bookValidation, updateBookValidation } from "../validation/book-validation.js";
-import ResponseError from "../utils/response-error.js";
+import { bookValidation, updateBookValidation } from "../validation/book.validation.js";
+import ResponseError from "../utils/response.error.js";
 
 const create = async (request) => {
   const {

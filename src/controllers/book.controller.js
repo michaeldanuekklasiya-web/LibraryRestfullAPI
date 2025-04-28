@@ -1,5 +1,5 @@
-import bookService from "../services/book-service.js";
-import ResponseSuccess from "../utils/response-success.js";
+import bookService from "../services/book.service.js";
+import ResponseSuccess from "../utils/response.success.js";
 import { formatBookData } from "../utils/helper.js";
 
 const uploadBook = async (req, res, next) => {

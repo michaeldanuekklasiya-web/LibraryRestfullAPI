@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import authService from "../services/auth-service.js";
-import ResponseSuccess from "../utils/response-success.js";
-import ResponseError from "../utils/response-error.js";
+import authService from "../services/auth.service.js";
+import ResponseSuccess from "../utils/response.success.js";
+import ResponseError from "../utils/response.error.js";
 import { formatUserData } from "../utils/helper.js";
 
 const registerUser = async (req, res, next) => {
