@@ -22,7 +22,7 @@ const loginUser = async (req, res, next) => {
   try {
     const user = await authService.login(req.body);
 
-    const { accessToken, refreshToken } = await authService.generateTokens(user);
+    const { accessToken, refreshToken } = await authService.generateTokens(user.id);
 
     const response = ResponseSuccess.ok("User login successfully", {
       user: formatUserData(user),

@@ -64,32 +64,17 @@ const refresh = async (decoded, refreshToken) => {
   return existingUser;
 };
 
-const generateTokens = async (user) => {
-  const accessToken = jwt.sign(
-    { id: user.id, name: user.name, email: user.email },
-    process.env.JWT_SECRET,
-    { expiresIn: "15m" }
-  );
+const generateTokens = async (userId) => {
+  const sessionId = uuidv4();
 
-  const refreshToken = jwt.sign(
-    { id: user.id, name: user.name, email: user.email },
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-  );
-
-  const existingToken = await RefreshToken.findOne({
-    where: { userId: user.id },
+  await UserSession.create({
+    session_id: sessionId,
+    user_id: userId,
+    expired_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
 
-  if (existingToken) {
-    await RefreshToken.update({ token: refreshToken }, { where: { userId: user.id } });
-  } else {
-    await RefreshToken.create({
-      token: refreshToken,
-      userId: user.id,
-    });
-  }
-
+  const accessToken = jwt.sign({ session_id: sessionId }, process.env.JWT_SECRET, { expiresIn: "15m" });
+  const refreshToken = jwt.sign({ session_id: sessionId }, process.env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
   return { accessToken, refreshToken };
 };
 
