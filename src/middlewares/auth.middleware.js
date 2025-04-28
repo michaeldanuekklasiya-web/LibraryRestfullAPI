@@ -12,7 +12,7 @@ const authenticateToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // ← penting!
+    req.user = decoded;
     next();
   } catch (err) {
     next(ResponseError.unauthorized("Invalid access token"));
