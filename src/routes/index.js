@@ -1,14 +1,8 @@
-  import express from "express";
-  // import publicRoutes from "../routes/public.js";
-  import v1Routes from "./v1/index.route.js";
-  // import v2Routes from "./v2/index.js";
+import express from "express";
+import v1Routes from "./v1/index.route.js";
 
-  const router = express.Router();
+const router = express.Router();
 
-  // router.use("/public", publicRoutes);
-  router.use("/v1", v1Routes);
-  // router.use("/v2", v2Routes);
+router.use("/v1", v1Routes);;
 
-  export default router;
-
-  export { router };
+export default router;
