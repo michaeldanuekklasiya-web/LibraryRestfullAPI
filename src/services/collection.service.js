@@ -1,15 +1,11 @@
 import Collection from "../models/Collection.js";
 import Book from "../models/Book.js";
 import ResponseError from "../utils/response.error.js";
-import { validate as isValidUuid } from "uuid";  // Import UUID validation
-
+import { validate } from "../validation/validation.js";
+import { createCollectionValidation } from "../validation/collection.validation.js";
 
 const create = async (request) => {
-  const { user_id, book_id } = request;
-
-  if (!user_id || !book_id) {
-    throw ResponseError.badRequest("user_id and book_id are required");
-  }
+  const { user_id, book_id } = validate(createCollectionValidation, request);
 
   const bookExists = await Book.findByPk(book_id);
   if (!bookExists) throw ResponseError.notFound("Book not found");
@@ -18,7 +14,8 @@ const create = async (request) => {
     where: { user_id, book_id },
   });
 
-  if (existingCollection) throw ResponseError.conflict("This book is already bookmarked by the user");
+  if (existingCollection)
+    throw ResponseError.conflict("This book is already bookmarked by the user");
 
   const collection = await Collection.create({ user_id, book_id });
 
@@ -107,6 +104,7 @@ const deleteById = async (book_id, userId) => {
       data: responseData,
     };
   } catch (error) {
+    console.error("Error deleting collection:", error); // Log error for debugging
     throw error;
   }
 };

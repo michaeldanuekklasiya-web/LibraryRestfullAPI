@@ -64,7 +64,7 @@ const findAll = async (query = {}, limit, offset) => {
 };
 
 const findById = async (id) => {
-  if (!id || !isValidUuid(id)) throw ResponseError.badRequest("Invalid ID");
+  if (!id || !isValidUuid(id)) throw ResponseError.badRequest("Invalid UUID");
 
   const book = await Book.findByPk(id); // pastikan id ada di tabel
   if (!book) throw ResponseError.notFound("Book not found");
@@ -73,9 +73,7 @@ const findById = async (id) => {
 };
 
 const update = async (id, updateData) => {
-  const value  = updateBookValidation.validate(updateData);
-  if (error) throw ResponseError.badRequest(`Validation error: ${error.details[0].message}`);
-
+  const value = validate(updateBookValidation, updateData);
   const book = await findById(id);
   await book.update(value);
 

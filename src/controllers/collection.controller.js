@@ -56,7 +56,6 @@ const getAllCollections = async (req, res, next) => {
 const deleteCollectionById = async (req, res, next) => {
   try {
     const { id } = req.params;
-
     const userIdFromToken = req.user?.id;
 
     if (!userIdFromToken) {
@@ -68,6 +67,7 @@ const deleteCollectionById = async (req, res, next) => {
     const response = ResponseSuccess.ok("Collection deleted successfully", result?.data || null);
     return res.status(response.statusCode).json(response.body);
   } catch (error) {
+    console.error("Error deleting collection:", error); // Log error for debugging
     next(error);
   }
 };

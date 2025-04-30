@@ -1,14 +1,14 @@
-import Joi from "joi";
+import { z } from "zod";
 
-const registerUserValidation = Joi.object({
-  name: Joi.string().max(100).required(),
-  email: Joi.string().email().max(100).required(),
-  password: Joi.string().min(8).max(100).required(),
+const registerUserValidation = z.object({
+  name: z.string().max(100),
+  email: z.string().email().max(100),
+  password: z.string().min(8).max(100),
 });
 
-const loginUserValidation = Joi.object({
-  email: Joi.string().email().max(100).required(),
-  password: Joi.string().min(8).max(100).required(),
+const loginUserValidation = z.object({
+  email: z.string().email().max(100),
+  password: z.string().min(8).max(100),
 });
 
 export { registerUserValidation, loginUserValidation };
