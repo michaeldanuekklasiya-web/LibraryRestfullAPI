@@ -5,6 +5,7 @@ import { validate } from "../validation/validation.js";
 import { bookValidation, updateBookValidation } from "../validation/book.validation.js";
 import ResponseError from "../utils/response.error.js";
 import logger from "../config/logger.js";
+import { validate as isValidUuid } from "uuid";
 
 const create = async (request) => {
   const {
