@@ -3,6 +3,7 @@ import Book from "../models/Book.js";
 import ResponseError from "../utils/response.error.js";
 import { validate } from "../validation/validation.js";
 import { createCollectionValidation } from "../validation/collection.validation.js";
+import logger from "../config/logger.js";
 
 const create = async (request) => {
   const { user_id, book_id } = validate(createCollectionValidation, request);
@@ -29,6 +30,7 @@ const create = async (request) => {
     ],
   });
 
+  logger.info(`User ${user_id} bookmarked book ${book_id}`);
   return createdCollection;
 };
 
@@ -41,6 +43,7 @@ const findAll = async (userId, limit, offset) => {
   const bookIds = collections.map((c) => c.book_id);
 
   if (bookIds.length === 0) {
+    logger.info(`User ${userId} has no bookmarked books`);
     return { books: [], total_record: 0 };
   }
 
@@ -53,58 +56,57 @@ const findAll = async (userId, limit, offset) => {
     offset,
   });
 
+  logger.info(`User ${userId} fetched ${books.length} bookmarked books`);
   return { books, total_record };
 };
 
 const deleteById = async (book_id, userId) => {
-  try {
-    const collection = await Collection.findOne({
-      where: {
-        book_id,
-        user_id: userId,
+  const collection = await Collection.findOne({
+    where: {
+      book_id,
+      user_id: userId,
+    },
+    include: [
+      {
+        model: Book,
+        as: "book",
+        attributes: ["title", "author", "category", "date"],
       },
-      include: [
-        {
-          model: Book,
-          as: "book",
-          attributes: ["title", "author", "category", "date"],
-        },
-      ],
-    });
+    ],
+  });
 
-    if (!collection) {
-      throw ResponseError.notFound("Collection with this book_id not found");
-    }
-
-    const result = await Collection.destroy({
-      where: {
-        book_id,
-        user_id: userId,
-      },
-    });
-
-    if (result === 0) {
-      throw ResponseError.notFound("Collection with this book_id not found or already deleted");
-    }
-
-    const responseData = {
-      id: collection.id,
-      user_id: collection.user_id,
-      book_id: collection.book_id,
-      book_title: collection.book?.title,
-      book_author: collection.book?.author,
-      book_category: collection.book?.category,
-      book_date: collection.book?.date,
-    };
-
-    return {
-      error: false,
-      message: "Collection deleted successfully",
-      data: responseData,
-    };
-  } catch (error) {
-    throw error;
+  if (!collection) {
+    throw ResponseError.notFound("Collection with this book_id not found");
   }
+
+  const result = await Collection.destroy({
+    where: {
+      book_id,
+      user_id: userId,
+    },
+  });
+
+  if (result === 0) {
+    throw ResponseError.notFound("Collection with this book_id not found or already deleted");
+  }
+
+  logger.info(`User ${userId} removed bookmark for book ${book_id}`);
+
+  const responseData = {
+    id: collection.id,
+    user_id: collection.user_id,
+    book_id: collection.book_id,
+    book_title: collection.book?.title,
+    book_author: collection.book?.author,
+    book_category: collection.book?.category,
+    book_date: collection.book?.date,
+  };
+
+  return {
+    error: false,
+    message: "Collection deleted successfully",
+    data: responseData,
+  };
 };
 
 export default {

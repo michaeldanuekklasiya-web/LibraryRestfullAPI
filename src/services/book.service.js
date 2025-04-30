@@ -4,6 +4,7 @@ import { isDefined } from "../utils/helper.js";
 import { validate } from "../validation/validation.js";
 import { bookValidation, updateBookValidation } from "../validation/book.validation.js";
 import ResponseError from "../utils/response.error.js";
+import logger from "../config/logger.js";
 
 const create = async (request) => {
   const {
@@ -35,7 +36,8 @@ const create = async (request) => {
   });
 
   if (!newBook) throw ResponseError.badRequest("Failed to create book");
-
+  
+  logger.info(`Book created successfully: ${newBook.id} - "${newBook.title}"`);
   return newBook;
 };
 
@@ -59,6 +61,7 @@ const findAll = async (query = {}, limit, offset) => {
     offset,
   });
 
+  logger.info(`Books fetched: ${books.length} records, total: ${total_record}`);
   return { books, total_record };
 };
 
@@ -68,6 +71,7 @@ const findById = async (id) => {
   const book = await Book.findByPk(id);
   if (!book) throw ResponseError.notFound("Book not found");
 
+  logger.info(`Book fetched by ID: ${id}`);
   return book;
 };
 
@@ -77,12 +81,15 @@ const update = async (id, updateData) => {
   const book = await findById(id);
   await book.update(value);
 
+  logger.info(`Book updated: ${id}`);
   return book;
 };
 
 const remove = async (id) => {
   const book = await findById(id);
   await book.destroy();
+
+  logger.info(`Book deleted: ${id}`);
   return book;
 };
 

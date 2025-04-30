@@ -21,8 +21,6 @@ const updateBook = async (req, res, next) => {
     const newData = req.body;
 
     const updatedBook = await bookService.update(id, newData);
-    
-    console.log(updatedBook);
     const response = ResponseSuccess.ok("Data updated successfully", formatBookData(updatedBook));
 
     return res.status(response.statusCode).json(response.body);

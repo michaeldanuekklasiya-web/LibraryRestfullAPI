@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 const bookValidation = z.object({
-  title: z.string().max(255),
-  author: z.string().max(255),
-  date: z.coerce.date(), // jika date input dari string
+  title: z.string().min(5).max(255),
+  author: z.string().min(3).max(255),
+  date: z.coerce.date(),
   category: z.string().max(100),
   image: z.string().max(255).optional(),
   description: z.string().optional(),
@@ -11,7 +11,7 @@ const bookValidation = z.object({
   year_published: z.number().int().min(1000).max(new Date().getFullYear()),
   page_count: z.number().int().min(1),
   format: z.string().max(100),
-  doi: z.string().max(100).optional(),
+  doi: z.string().min(5).max(100),
 });
 
 const updateBookValidation = bookValidation.partial().refine(data => Object.keys(data).length > 0, {

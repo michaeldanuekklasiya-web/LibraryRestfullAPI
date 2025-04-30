@@ -4,6 +4,7 @@ import { registerUserValidation, loginUserValidation } from "../validation/user.
 import User from "../models/User.js";
 import RefreshToken from "../models/RefreshToken.js";
 import ResponseError from "../utils/response.error.js";
+import logger from "../config/logger.js";
 
 const register = async (request) => {
   const { name, email, password } = validate(registerUserValidation, request);
@@ -19,6 +20,7 @@ const register = async (request) => {
     password: passwordHash,
   });
 
+  logger.info(`User registered successfully: ${user.id} - ${user.email}`);
   return user;
 };
 
@@ -31,6 +33,7 @@ const login = async (request) => {
   const passwordMatch = await bcryptjs.compare(password, user.password);
   if (!passwordMatch) throw ResponseError.unauthorized("Invalid email or password");
 
+  logger.info(`User logged in successfully: ${user.id} - ${user.email}`);
   return user;
 };
 
@@ -44,6 +47,7 @@ const logout = async (decoded) => {
   const existingUser = await User.findByPk(decoded.id);
   if (!existingUser) throw ResponseError.unauthorized("User not found");
 
+  logger.info(`User logged out successfully: ${existingUser.id} - ${existingUser.email}`);
   return existingUser;
 };
 
