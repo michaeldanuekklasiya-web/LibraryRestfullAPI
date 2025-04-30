@@ -72,12 +72,11 @@ const findById = async (id) => {
 };
 
 const update = async (id, updateData) => {
-  const { error, value } = updateBookValidation.validate(updateData);
-  if (error) throw ResponseError.badRequest(`Validation error: ${error.details[0].message}`);
+  const value = validate(updateBookValidation, updateData);
 
   const book = await findById(id);
   await book.update(value);
-  
+
   return book;
 };
 

@@ -1,13 +1,11 @@
 import Collection from "../models/Collection.js";
 import Book from "../models/Book.js";
 import ResponseError from "../utils/response.error.js";
+import { validate } from "../validation/validation.js";
+import { createCollectionValidation } from "../validation/collection.validation.js";
 
 const create = async (request) => {
-  const { user_id, book_id } = request;
-
-  if (!user_id || !book_id) {
-    throw ResponseError.badRequest("user_id and book_id are required");
-  }
+  const { user_id, book_id } = validate(createCollectionValidation, request);
 
   const bookExists = await Book.findByPk(book_id);
   if (!bookExists) throw ResponseError.notFound("Book not found");
