@@ -15,7 +15,8 @@ const create = async (request) => {
     where: { user_id, book_id },
   });
 
-  if (existingCollection) throw ResponseError.conflict("This book is already bookmarked by the user");
+  if (existingCollection)
+    throw ResponseError.conflict("This book is already bookmarked by the user");
 
   const collection = await Collection.create({ user_id, book_id });
 

@@ -1,6 +1,7 @@
 import bookService from "../services/book.service.js";
 import ResponseSuccess from "../utils/response.success.js";
 import { formatBookData } from "../utils/helper.js";
+import { validate as isValidUuid } from "uuid";
 
 const uploadBook = async (req, res, next) => {
   try {
@@ -14,7 +15,6 @@ const uploadBook = async (req, res, next) => {
     next(error);
   }
 };
-
 const updateBook = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -78,10 +78,17 @@ const getAllBook = async (req, res, next) => {
 const getBookById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    
-    const book = await bookService.findById(id);
-    const response = ResponseSuccess.ok("Data retrieved successfully", formatBookData(book));
 
+    if (!isValidUuid(id)) {
+      return res.status(400).json({ error: true, message: "Invalid UUID" });
+    }
+
+    const book = await bookService.findById(id);
+    if (!book) {
+      return res.status(404).json({ error: true, message: "Book not found" });
+    }
+
+    const response = ResponseSuccess.ok("Data retrieved successfully", formatBookData(book));
     return res.status(response.statusCode).json(response.body);
   } catch (error) {
     next(error);
