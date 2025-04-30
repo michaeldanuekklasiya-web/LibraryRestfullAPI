@@ -1,6 +1,8 @@
 import Collection from "../models/Collection.js";
 import Book from "../models/Book.js";
 import ResponseError from "../utils/response.error.js";
+import { validate as isValidUuid } from "uuid";  // Import UUID validation
+
 
 const create = async (request) => {
   const { user_id, book_id } = request;

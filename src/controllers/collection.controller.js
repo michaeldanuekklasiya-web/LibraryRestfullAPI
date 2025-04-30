@@ -41,8 +41,8 @@ const getAllCollections = async (req, res, next) => {
     };
 
     const response = ResponseSuccess.ok(
-      "Collection data retrieved successfully", 
-      formattedCollections, 
+      "Collection data retrieved successfully",
+      formattedCollections,
       pagination
     );
 

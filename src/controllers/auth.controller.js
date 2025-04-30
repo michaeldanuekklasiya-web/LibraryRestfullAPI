@@ -52,7 +52,8 @@ const loginUser = async (req, res, next) => {
 
     return res.status(response.statusCode).json(response.body);
   } catch (error) {
-    next(error);
+    console.error("Login Error:", error); // <-- penting banget untuk debugging
+    res.status(500).json({ error: true, message: "Internal Server Error" });
   }
 };
 

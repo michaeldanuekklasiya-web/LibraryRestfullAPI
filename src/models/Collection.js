@@ -1,22 +1,23 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
+import { v4 as uuidv4 } from "uuid";
 import Book from "./Book.js";
 
 const Collection = sequelize.define(
   "Collection",
   {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
       allowNull: false,
     },
     user_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     book_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
     },
   },
@@ -28,7 +29,6 @@ const Collection = sequelize.define(
 
 Collection.belongsTo(Book, {
   foreignKey: "book_id",
-  underscored: true,
 });
 
 export default Collection;

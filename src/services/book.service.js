@@ -4,6 +4,7 @@ import { isDefined } from "../utils/helper.js";
 import { validate } from "../validation/validation.js";
 import { bookValidation, updateBookValidation } from "../validation/book.validation.js";
 import ResponseError from "../utils/response.error.js";
+import { validate as isValidUuid } from "uuid";
 
 const create = async (request) => {
   const {
@@ -63,21 +64,21 @@ const findAll = async (query = {}, limit, offset) => {
 };
 
 const findById = async (id) => {
-  if (!id || isNaN(id)) throw ResponseError.badRequest("Invalid ID");
+  if (!id || !isValidUuid(id)) throw ResponseError.badRequest("Invalid ID");
 
-  const book = await Book.findByPk(id);
+  const book = await Book.findByPk(id); // pastikan id ada di tabel
   if (!book) throw ResponseError.notFound("Book not found");
 
   return book;
 };
 
 const update = async (id, updateData) => {
-  const { error, value } = updateBookValidation.validate(updateData);
+  const value  = updateBookValidation.validate(updateData);
   if (error) throw ResponseError.badRequest(`Validation error: ${error.details[0].message}`);
 
   const book = await findById(id);
   await book.update(value);
-  
+
   return book;
 };
 
