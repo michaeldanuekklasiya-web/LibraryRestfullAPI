@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-import { publicRouter } from "./routes/public-api.js";
-import { apiRouter } from "./routes/api.js";
+import { publicRouter } from "./routes/public.js";
+import { router } from "../src/routes/index.js";
 import sequelize from "./config/db.js";
 import errorMiddleware from "./middlewares/error.handler.js";
 
@@ -21,8 +21,8 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors());
 
-app.use("/api/v1", publicRouter);
-app.use("/api/v1", apiRouter);
+app.use("/api", publicRouter);
+app.use("/api", router);
 
 app.use(errorMiddleware);
 
