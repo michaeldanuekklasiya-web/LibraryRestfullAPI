@@ -18,7 +18,7 @@ const RefreshToken = sequelize.define('RefreshToken', {
   },
 }, {
   tableName: 'refresh_tokens',
-  timestamps: false
+  underscored: true,
 });
 
 export default RefreshToken;

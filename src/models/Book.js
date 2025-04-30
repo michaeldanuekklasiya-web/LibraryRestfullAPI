@@ -54,7 +54,7 @@ const Book = sequelize.define('Book', {
   }
 }, {
   tableName: 'books',
-  timestamps: false
+  underscored: true,
 });
 
 export default Book;

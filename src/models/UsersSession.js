@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
-const UserSession = sequelize.define("UserSession", {
+const UsersSession = sequelize.define("UsersSession", {
   session_id: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -21,8 +21,8 @@ const UserSession = sequelize.define("UserSession", {
     allowNull: false,
   },
 }, {
-  tableName: "user_sessions",
+  tableName: "users_sessions",
   underscored: true,
 });
 
-export default UserSession;
+export default UsersSession;

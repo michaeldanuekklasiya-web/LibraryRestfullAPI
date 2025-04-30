@@ -5,7 +5,7 @@ import ResponseSuccess from "../utils/response.success.js";
 import ResponseError from "../utils/response.error.js";
 import { formatUserData } from "../utils/helper.js";
 import User from "../models/User.js";
-import UserSession from "../models/UserSession.js";
+import UsersSession from "../models/UsersSession.js";
 
 const registerUser = async (req, res, next) => {
   try {
@@ -30,18 +30,16 @@ const loginUser = async (req, res, next) => {
       throw ResponseError.unauthorized("Invalid credentials");
     }
 
-    // Hapus semua session aktif sebelumnya
-    await UserSession.update(
+    await UsersSession.update(
       { is_active: false },
       { where: { user_id: user.id, is_active: true } }
     );
 
-    // Buat session baru
     const sessionId = uuidv4();
-    await UserSession.create({
+    await UsersSession.create({
       session_id: sessionId,
       user_id: user.id,
-      expired_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 hari
+      expired_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
     const token = jwt.sign({ session_id: sessionId }, process.env.JWT_SECRET, {
@@ -65,7 +63,7 @@ const logoutUser = async (req, res, next) => {
 
     const payload = jwt.verify(token, process.env.JWT_SECRET);
 
-    const session = await UserSession.findOne({
+    const session = await UsersSession.findOne({
       where: { session_id: payload.session_id },
     });
 
@@ -87,42 +85,8 @@ const logoutUser = async (req, res, next) => {
   }
 };
 
-// optional: refreshAccessToken kalau mau disesuaikan session based
-const refreshAccessToken = async (req, res, next) => {
-  const { refreshToken } = req.body;
-
-  if (!refreshToken) {
-    return next(ResponseError.unauthorized("Refresh token not provided"));
-  }
-
-  try {
-    const payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
-
-    const session = await UserSession.findOne({
-      where: { session_id: payload.session_id, is_active: true },
-    });
-
-    if (!session) {
-      throw ResponseError.unauthorized("Session expired or invalid");
-    }
-
-    const newAccessToken = jwt.sign({ session_id: session.session_id }, process.env.JWT_SECRET, {
-      expiresIn: "15m",
-    });
-
-    const response = ResponseSuccess.ok("Access token refreshed", {
-      accessToken: newAccessToken,
-    });
-
-    return res.status(response.statusCode).json(response.body);
-  } catch (error) {
-    next(error);
-  }
-};
-
 export default {
   registerUser,
   loginUser,
   logoutUser,
-  refreshAccessToken,
 };

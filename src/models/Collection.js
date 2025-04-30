@@ -28,7 +28,7 @@ const Collection = sequelize.define(
 
 Collection.belongsTo(Book, {
   foreignKey: "book_id",
-  as: "book",
+  underscored: true,
 });
 
 export default Collection;

@@ -48,40 +48,8 @@ const logout = async (decoded) => {
   return existingUser;
 };
 
-const refresh = async (decoded, refreshToken) => {
-  const tokenRecord = await RefreshToken.findOne({
-    where: {
-      token: refreshToken,
-      userId: decoded.id,
-    },
-  });
-
-  if (!tokenRecord) throw ResponseError.unauthorized("Invalid or expired refresh token");
-
-  const existingUser = await User.findByPk(decoded.id);
-  if (!existingUser) throw ResponseError.notFound("User not found");
-
-  return existingUser;
-};
-
-const generateTokens = async (userId) => {
-  const sessionId = uuidv4();
-
-  await UserSession.create({
-    session_id: sessionId,
-    user_id: userId,
-    expired_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-  });
-
-  const accessToken = jwt.sign({ session_id: sessionId }, process.env.JWT_SECRET, { expiresIn: "15m" });
-  const refreshToken = jwt.sign({ session_id: sessionId }, process.env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
-  return { accessToken, refreshToken };
-};
-
 export default {
   register,
   login,
-  logout,
-  refresh,
-  generateTokens,
+  logout
 };

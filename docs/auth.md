@@ -42,13 +42,7 @@ https://localhost:3000/api/v1/auth
     "error": false,
     "message": "User login successfully",
     "data": {
-        user: {
-          id: 1,
-          name: Mark Johnson,
-          email: markjohnson@gmail.com
-        },
-        "accessToken": eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6Ik51ciBBemlzIFNhcHV0cmEiLCJpYXQiOjE3NDUwNTg4NzgsImV4cCI6MTc0NTA2MjQ3OH0.TAd_ClWUIfVjTw88DrwBLhZ-dGBWoCkUmbpBojfXmbI,
-        "refreshToken": eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwibmFtZSI6Ik1hcmsgSm9obnNvbiIsImVtYWlsIjoibWFya2pvaG5zb25AZ21haWwuY29tIiwiaWF0IjoxNzQ1MTE3OTIzLCJleHAiOjE3NDU3MjI3MjN9.R3xntuUQ9-_Ko1E0TLUC0A4w9YhyOxXCWfpsLZbN0xs
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjoiNDE5NmQzMTMtMzEzYi00YjMyLWFjYWItZDA0YWVhOTRjMThiIiwiaWF0IjoxNzQ1ODMyODQ2LCJleHAiOjE3NDY0Mzc2NDZ9.yRgTJ1Es9QhTmphnY3o49TokwBJrCXhPyFXjQWg188o"
     }
 }
 ```
@@ -66,13 +60,6 @@ https://localhost:3000/api/v1/auth
 ```Response
 {
     "error": false,
-    "message": "User logout successfully",
-    "data": {
-        user: {
-          id: 1,
-          name: Mark Johnson,
-          email: markjohnson@gmail.com
-        } 
-    }
+    "message": "User logout successfully"
 }
 ```
