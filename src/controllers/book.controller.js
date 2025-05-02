@@ -60,14 +60,16 @@ const getAllBook = async (req, res, next) => {
     const formattedBooks = books.map(formatBookData);
     const totalPages = Math.ceil(total_record / limit);
 
-    const pagination = {
-      total_record,
-      page,
-      limit,
-      total_pages: totalPages,
+    const meta = {
+      pagination: {
+        total_record,
+        page,
+        limit,
+        total_pages: totalPages,
+      },
     };
 
-    const response = ResponseSuccess.ok("Data retrieved successfully", formattedBooks, pagination);
+    const response = ResponseSuccess.ok("Data retrieved successfully", formattedBooks, meta);
 
     return res.status(response.statusCode).json(response.body);
   } catch (error) {

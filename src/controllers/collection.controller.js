@@ -33,17 +33,19 @@ const getAllCollections = async (req, res, next) => {
     const formattedCollections = books.map(formatCollectionData);
     const totalPages = Math.ceil(total_record / limit);
 
-    const pagination = {
-      total_record,
-      page,
-      limit,
-      total_pages: totalPages,
+    const meta = {
+      pagination: {
+        total_record,
+        page,
+        limit,
+        total_pages: totalPages,
+      },
     };
 
     const response = ResponseSuccess.ok(
       "Collection data retrieved successfully",
       formattedCollections,
-      pagination
+      meta
     );
 
     return res.status(response.statusCode).json(response.body);
