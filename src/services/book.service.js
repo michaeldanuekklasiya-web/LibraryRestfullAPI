@@ -22,6 +22,13 @@ const create = async (request) => {
     doi,
   } = validate(bookValidation, request);
 
+  const existing = await Book.findOne({ where: { doi } });
+  if (existing) {
+    throw ResponseError.badRequest("DOI already exists", [
+      { field: "doi", message: "This DOI is already used by another book" }
+    ]);
+  }
+  
   const newBook = await Book.create({
     title,
     author,
@@ -69,7 +76,7 @@ const findAll = async (query = {}, limit, offset) => {
 const findById = async (id) => {
   if (!id || !isValidUuid(id)) throw ResponseError.badRequest("Invalid UUID");
 
-  const book = await Book.findByPk(id); // pastikan id ada di tabel
+  const book = await Book.findByPk(id);
   if (!book) throw ResponseError.notFound("Book not found");
 
   logger.info(`Book fetched by ID: ${id}`);
