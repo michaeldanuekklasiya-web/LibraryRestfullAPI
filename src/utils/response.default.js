@@ -34,7 +34,6 @@ class ResponseError extends Error {
     this.meta = null;
     this.message = message;
 
-    // Tambahkan message utama ke awal errors hanya jika belum ada
     const messageIncluded = errors.some(
       (err) => typeof err === "object" && err.message === message
     );

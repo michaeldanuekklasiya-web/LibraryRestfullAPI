@@ -3,7 +3,6 @@ import { validate } from "../validation/validation.js";
 import { registerUserValidation, loginUserValidation } from "../validation/user.validation.js";
 import User from "../models/User.js";
 import { ResponseError } from "../utils/response.default.js";
-// import ResponseError from "../utils/response.error.js";
 import logger from "../config/logger.js";
 
 const register = async (request) => {
@@ -41,12 +40,6 @@ const login = async (request) => {
 };
 
 const logout = async (decoded) => {
-  // await RefreshToken.destroy({
-  //   where: {
-  //     userId: decoded.id,
-  //   },
-  // });
-
   const existingUser = await User.findByPk(decoded.id);
   if (!existingUser) throw ResponseError.unauthorized("User not found");
 

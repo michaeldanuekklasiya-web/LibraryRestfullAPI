@@ -58,16 +58,12 @@ const deleteCollectionById = async (req, res, next) => {
     const { id } = req.params;
     const userIdFromToken = req.user?.id;
 
-    if (!userIdFromToken) {
-      return next(ResponseError.unauthorized("Invalid token"));
-    }
-
     const result = await collectionService.deleteById(id, userIdFromToken);
 
     const response = ResponseSuccess.ok("Collection deleted successfully", result?.data || null);
     return res.status(response.statusCode).json(response.body);
   } catch (error) {
-    console.error("Error deleting collection:", error); // Log error for debugging
+    console.error("Error deleting collection:", error);
     next(error);
   }
 };
