@@ -1,5 +1,5 @@
 import collectionService from "../services/collection.service.js";
-import ResponseSuccess from "../utils/response.success.js";
+import { ResponseSuccess, ResponseError } from "../utils/response.default.js";
 import { formatCollectionData } from "../utils/helper.js";
 
 const createCollection = async (req, res, next) => {

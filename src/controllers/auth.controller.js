@@ -1,8 +1,7 @@
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import authService from "../services/auth.service.js";
-import ResponseSuccess from "../utils/response.success.js";
-import ResponseError from "../utils/response.error.js";
+import { ResponseSuccess, ResponseError } from "../utils/response.default.js";
 import { formatUserData } from "../utils/helper.js";
 import User from "../models/User.js";
 import UsersSession from "../models/UsersSession.js";
@@ -52,8 +51,7 @@ const loginUser = async (req, res, next) => {
 
     return res.status(response.statusCode).json(response.body);
   } catch (error) {
-    console.error("Login Error:", error); // <-- penting banget untuk debugging
-    res.status(500).json({ error: true, message: "Internal Server Error" });
+    next(error);
   }
 };
 

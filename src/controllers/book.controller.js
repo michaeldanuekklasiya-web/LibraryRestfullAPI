@@ -1,5 +1,5 @@
 import bookService from "../services/book.service.js";
-import ResponseSuccess from "../utils/response.success.js";
+import { ResponseSuccess } from "../utils/response.default.js";
 import { formatBookData } from "../utils/helper.js";
 import { validate as isValidUuid } from "uuid";
 

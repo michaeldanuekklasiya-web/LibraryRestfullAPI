@@ -1,6 +1,7 @@
 import Collection from "../models/Collection.js";
 import Book from "../models/Book.js";
-import ResponseError from "../utils/response.error.js";
+import { ResponseError } from "../utils/response.default.js";
+// import ResponseError from "../utils/response.error.js";
 import { validate } from "../validation/validation.js";
 import { createCollectionValidation } from "../validation/collection.validation.js";
 import logger from "../config/logger.js";

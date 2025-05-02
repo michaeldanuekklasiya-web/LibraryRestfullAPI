@@ -1,5 +1,5 @@
 import { ZodError } from "zod";
-import ResponseError from "../utils/response.error.js";
+import { ResponseError } from "../utils/response.default.js";
 
 export const validate = (schema, request) => {
   try {

@@ -3,7 +3,8 @@ import { Op } from "sequelize";
 import { isDefined } from "../utils/helper.js";
 import { validate } from "../validation/validation.js";
 import { bookValidation, updateBookValidation } from "../validation/book.validation.js";
-import ResponseError from "../utils/response.error.js";
+import {ResponseError} from "../utils/response.default.js";
+// import ResponseError from "../utils/response.error.js";
 import logger from "../config/logger.js";
 import { validate as isValidUuid } from "uuid";
 
@@ -37,7 +38,7 @@ const create = async (request) => {
   });
 
   if (!newBook) throw ResponseError.badRequest("Failed to create book");
-  
+
   logger.info(`Book created successfully: ${newBook.id} - "${newBook.title}"`);
   return newBook;
 };
